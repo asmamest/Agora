@@ -34,13 +34,13 @@ const Header = ({user}: Props) => {
         {pathname.split('/')[1]}
       </div>
     )}
-    { /* TODO : Build stripe subscription and create webinar button */}
+    { /* TODO : Build stripe subscription and create webinar button  */}
     <div className="flex gap-6 items-center flex-wrap">
         <PurpleIcon>
             <LightningIcon />
         </PurpleIcon>
 
-        <CreateWebinarButton />    1/26/45
+        <CreateWebinarButton />    
 
 
 

@@ -12,6 +12,5 @@ export default function Home() {
         <Waitlist />
       </main>
     </div> 
-    
-  );
+  )
 }

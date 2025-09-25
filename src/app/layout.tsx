@@ -1,8 +1,8 @@
-import type { Metadata } from "next"
-import { ThemeProvider } from "@/providers/theme-provider";
-import { Manrope } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { ThemeProvider } from '@/providers/theme-provider'
+import { Manrope } from 'next/font/google'
+import { ClerkProvider } from '@clerk/nextjs'
+import './globals.css'
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -29,5 +29,5 @@ export default function RootLayout({
         </body>
       </html>
     </ClerkProvider>
-  );
+  )
 }

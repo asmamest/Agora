@@ -1,1 +1,12 @@
-npm i zustand@5.0.3 
+i had to know why schema.prisma is not colored , 
+also : configure icons,
+Error to resolve : CREATE TYPE "WebinarStatusEnum" AS ENUM ('SCHEDULED', 'WAITING_ROOM', 'LIVE', 'ENDED', 'CANCELED');
+
+Syntax Error at line 2, column 35
+
+CREATE TYPE "WebinarStatusEnum" AS ENUM ('SCHEDULED', 'WAITING_ROOM', 'LIVE', 'ENDED', 'CANCELED');
+
+^^^                                                              
+Expected: paren_expr_list,';',object_kind,array_ty_def,
+dbtools
+migration.sql(2, 36): Syntax Error at line 2, column 35
