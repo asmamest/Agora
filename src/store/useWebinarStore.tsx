@@ -1,5 +1,7 @@
-import { ValidationErrors } from '@/lib/type'
+import { validateAdditionalInfo, validateBasicInfo, validateCTA, ValidationErrors } from '@/lib/type'
 import { CtaTypeEnum } from '@prisma/client'
+import { Value } from '@radix-ui/react-select'
+import { stat } from 'fs'
 import { create } from 'zustand'
 
 export type WebinarFormState = {
@@ -65,7 +67,19 @@ type WebinarStore = {
 
 
 
-    updateAdditionalInfoField     1/38/06
+    updateAdditionalInfoField: <
+        K extends keyof WebinarFormState['additionalInfo']
+    >(
+        field: K,
+        value: WebinarFormState['additionalInfo'][K]
+    ) => void 
+
+
+    validateStep: (stepId: keyof WebinarFormState) => boolean
+
+    getStepValidationErrors: (stepId: keyof WebinarFormState) => ValidationErrors
+
+    resetForm: () => void
 }
 
 const initialState: WebinarFormState = {
@@ -96,14 +110,83 @@ const initialValidation: ValidationState = {
     additionalInfo: { valid: true, errors: {}}, 
 }
 
-export const useWebinarStore = create<WebinarStore>((set)=>({
+export const useWebinarStore = create<WebinarStore>((set, get) => ({
     isModalOpen: false,
     isComplete: false,
     isSubmitting: false,
     FormData: initialState,
     validation: initialValidation,
 
-     setModalOpen: (open: boolean) => set({ isModalOpen:open}), 
+    setModalOpen: (open: boolean) => set({ isModalOpen:open}), 
     setComplete: (complete: boolean) => set({ isComplete:complete}),
-    setSubmitting: (submitting: boolean) => set({ isSubmitting:submitting}),
+    setSubmitting: (submitting: boolean) => set({ isSubmitting:
+        submitting }),
+
+    updateBasicInfoField: (field, value) => {
+        set((state) => {
+            const newBasicInfo = { ...state.formData.basicInfo, [field]:
+                value }
+
+            const validationResult = validateBasicInfo(newBasicInfo)
+
+            return {
+                formData: { ...state.formData, basicInfo: newBasicInfo},
+                validation: { ...state.validation, basicInfo: 
+                    validationResult},
+            }
+        })
+    },
+
+    updateCTAField: (field,value) => {
+        set((state) => {
+            const newCTA = { ...state.formData.cta, [field]: value }
+            const validationResult = validateCTA(newCTA)
+
+            return {
+                formData: { ...state.formData, cta: newCTA},
+                validation: { ...state.validation, cta: validationResult},
+            }
+        })
+    },
+
+
+    updateAdditionalInfoField: (field, value) => {
+        set((state) => {
+            const newAdditionalInfo = { 
+                ...state.formData.additionalInfo,
+                [field]: value,}
+            const validationResult = validateAdditionalInfo(newAdditionalInfo)
+
+            return{
+                formData: {
+                    ...state.formData,
+                    additionalInfo: newAdditionalInfo,
+                },
+                validation: {
+                    ...state.validation,
+                    additionalInfo: validationResult,
+                },
+            }
+        })
+    },
+
+    validateStep(stepId: keyof WebinarFormState) => {
+
+        const { formData } = get()
+        let validationResult
+
+        switch (stepId) {
+            case 'basicInfo':
+                validationResult = validateBasicInfo(formData.basicInfo)
+                break
+
+            case 'cta':
+                validationResult = validateAdditionalInfo(formData.cta)
+                break
+            case 'additionalInfo':
+                validationResult = validateAdditionalInfo(formData.additionalInfo)
+                break
+        }
+
+    },   1/45/40
 }))
