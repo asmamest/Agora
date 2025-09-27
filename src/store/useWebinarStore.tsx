@@ -114,13 +114,12 @@ export const useWebinarStore = create<WebinarStore>((set, get) => ({
     isModalOpen: false,
     isComplete: false,
     isSubmitting: false,
-    FormData: initialState,
+    formData: initialState,
     validation: initialValidation,
 
     setModalOpen: (open: boolean) => set({ isModalOpen:open}), 
     setComplete: (complete: boolean) => set({ isComplete:complete}),
-    setSubmitting: (submitting: boolean) => set({ isSubmitting:
-        submitting }),
+    setSubmitting: (submitting: boolean) => set({ isSubmitting:submitting }),
 
     updateBasicInfoField: (field, value) => {
         set((state) => {
@@ -154,7 +153,9 @@ export const useWebinarStore = create<WebinarStore>((set, get) => ({
         set((state) => {
             const newAdditionalInfo = { 
                 ...state.formData.additionalInfo,
-                [field]: value,}
+                [field]: value,
+            }
+            
             const validationResult = validateAdditionalInfo(newAdditionalInfo)
 
             return{
@@ -170,7 +171,8 @@ export const useWebinarStore = create<WebinarStore>((set, get) => ({
         })
     },
 
-    validateStep(stepId: keyof WebinarFormState) => {
+    validateStep: (stepId: keyof WebinarFormState) => {
+
 
         const { formData } = get()
         let validationResult
@@ -181,12 +183,33 @@ export const useWebinarStore = create<WebinarStore>((set, get) => ({
                 break
 
             case 'cta':
-                validationResult = validateAdditionalInfo(formData.cta)
+                validationResult = validateCTA(formData.cta)
                 break
             case 'additionalInfo':
                 validationResult = validateAdditionalInfo(formData.additionalInfo)
                 break
         }
 
-    },   1/45/40
+        set((state) => {
+            return {
+                validation: { ...state.validation,[stepId]: validationResult},
+            }
+        })
+
+        return validationResult.valid
+
+    },     
+
+    getStepValidationErrors: (stepId: keyof WebinarFormState) => {
+        return get().validation[stepId].errors
+    },
+
+    resetForm: () => set({
+        isComplete : false,
+        isSubmitting: false,
+        formData: initialState,
+        validation: initialValidation,
+    }),
+
+
 }))

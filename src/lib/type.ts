@@ -13,7 +13,7 @@ export const validateBasicInfo = (data: {
   date?: Date
   time?: string
   timeFormat?: 'AM' | 'PM'
-}): ValidationResult => {
+}): ValidationResult => {  
   const errors: ValidationErrors = {}
 
   if (!data.webinarName?.trim()) {
