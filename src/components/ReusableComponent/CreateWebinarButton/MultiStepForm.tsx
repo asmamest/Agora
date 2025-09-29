@@ -43,7 +43,7 @@ const MultiStepForm = ({ steps, onComplete }: Props) => {
                 <div className="flex items-start gap-4">
                   <div className="relative">
                     <motion.div>
-                      hello worlk
+                      hello worl jkhkjhkjhkk
                     </motion.div>
                   </div>
                 </div>
